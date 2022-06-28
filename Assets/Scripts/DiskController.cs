@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DualPantoFramework;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ public class DiskController : MonoBehaviour {
 	private int p2Score;
 	private bool gameOver;
 	private bool gamePaused;
+	private LowerHandle handle;
 
 	public GameObject p1;
 	public GameObject p2;
@@ -21,7 +23,7 @@ public class DiskController : MonoBehaviour {
 	public GameObject gameOverCanvas;
 	public GameObject pauseMenuCanvas;
 
-	void Start ()
+	async void Start ()
 	{
 		gameOver = false;
 		gamePaused = false;
@@ -44,6 +46,10 @@ public class DiskController : MonoBehaviour {
 		timeText.text = "TIME LEFT: " + timeLeft.ToString("f1");
 		gameOverText.text = "";
 		timeUpText.text = "";
+
+		handle = GameObject.Find("Panto").GetComponent<LowerHandle>();
+		await handle.MoveToPosition(gameObject.transform.position, 20, false);
+		await handle.SwitchTo(gameObject, 2000);
 	}
 
 	void Update()
@@ -54,13 +60,9 @@ public class DiskController : MonoBehaviour {
 			if(!gameOver)
 			{
 				if(!gamePaused)
-				{
 					PauseMenu();
-				}
 				else
-				{
 					UnPauseMenu();
-				}
 			}
 		}
 

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DualPantoFramework;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,15 +15,19 @@ public class PlayerController : MonoBehaviour
 	public Boundarie boundarie;
 
 	private Rigidbody rb;
+	private UpperHandle handle;
 
-	void Start ()
+	async void Start ()
 	{
 		rb = GetComponent<Rigidbody>();
+		handle = GameObject.Find("Panto").GetComponent<UpperHandle>();
+
+		await handle.MoveToPosition(gameObject.transform.position, speed, true);
 	}
 
 	void Update ()
 	{
-		float moveHorizontal = Input.GetAxis ("Horizontal");
+		/* float moveHorizontal = Input.GetAxis ("Horizontal");
 		float moveVertical = Input.GetAxis ("Vertical");
 
 		Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
@@ -33,6 +38,25 @@ public class PlayerController : MonoBehaviour
 				Mathf.Clamp (rb.position.x, boundarie.xMin, boundarie.xMax),
 				0.05f,
 				Mathf.Clamp (rb.position.z, boundarie.zMin, boundarie.zMax)
-		);
+		); */
+
+		PantoMovement();
+	}
+
+	void PantoMovement() 
+    {
+        Vector3 handlePos = handle.GetPosition();
+		handlePos.y = 0.05f;
+
+		rb.velocity = (handlePos - rb.position) * speed;
+		//rb.position = handlePos;
+
+		//rb.position = new Vector3
+		//(
+		//		Mathf.Clamp(rb.position.x, boundarie.xMin, boundarie.xMax),
+		//		0.05f,
+		//		Mathf.Clamp(rb.position.z, boundarie.zMin, boundarie.zMax)
+		//);
+
 	}
 }
