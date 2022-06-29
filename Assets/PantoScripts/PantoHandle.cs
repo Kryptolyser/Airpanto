@@ -223,7 +223,7 @@ namespace DualPantoFramework
 
         float MaxMovementSpeed()
         {
-            return 1.5f;
+            return 999.0f;
         }
 
         public void Rotate(float rotation)

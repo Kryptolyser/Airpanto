@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using SpeechIO;
+using System.Threading.Tasks;
 
 public class DiskController : MonoBehaviour {
 
@@ -10,7 +12,9 @@ public class DiskController : MonoBehaviour {
 	private int p2Score;
 	private bool gameOver;
 	private bool gamePaused;
-	private LowerHandle handle;
+	private LowerHandle lHandle;
+	private UpperHandle uHandle;
+	private SpeechOut speechOut;
 
 	public GameObject p1;
 	public GameObject p2;
@@ -33,7 +37,6 @@ public class DiskController : MonoBehaviour {
 		goalCanvas.SetActive(false);
 
 		rb = GetComponent<Rigidbody>();
-		rb.position = new Vector3(0,0,0);
 
 		p1Score = 0;
 		p2Score = 0;
@@ -47,14 +50,14 @@ public class DiskController : MonoBehaviour {
 		gameOverText.text = "";
 		timeUpText.text = "";
 
-		handle = GameObject.Find("Panto").GetComponent<LowerHandle>();
-		await handle.MoveToPosition(gameObject.transform.position, 20, false);
-		await handle.SwitchTo(gameObject, 2000);
+		lHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
+		uHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
+		await lHandle.MoveToPosition(new Vector3(0,1,0), 5, false);
+		await lHandle.MoveToPosition(gameObject.transform.position, 5, false);
 	}
 
 	void Update()
 	{
-
 		if(Input.GetKeyDown(KeyCode.Escape))
 		{
 			if(!gameOver)
@@ -92,23 +95,23 @@ public class DiskController : MonoBehaviour {
 
 	void OnCollisionEnter(Collision other)
 	{
-		if (other.gameObject.CompareTag ("Player1Goal"))
-		{
-			goalCanvas.SetActive(true);
-			Time.timeScale = 0;
-			StartCoroutine(ResetPos(false));
-			p2Score += 1;
-			setScoreText();
-		}
+		//if (other.gameObject.CompareTag ("Player1Goal"))
+		//{
+		//	goalCanvas.SetActive(true);
+		//	Time.timeScale = 0;
+		//	StartCoroutine(ResetPos(false));
+		//	p2Score += 1;
+		//	setScoreText();
+		//}
 
-		if (other.gameObject.CompareTag ("Player2Goal"))
-		{
-			goalCanvas.SetActive(true);
-			Time.timeScale = 0;
-			StartCoroutine(ResetPos(true));
-			p1Score += 1;
-			setScoreText();
-		}
+		//if (other.gameObject.CompareTag ("Player2Goal"))
+		//{
+		//	goalCanvas.SetActive(true);
+		//	Time.timeScale = 0;
+		//	StartCoroutine(ResetPos(true));
+		//	p1Score += 1;
+		//	setScoreText();
+		//}
 	}
 
 	void setScoreText()

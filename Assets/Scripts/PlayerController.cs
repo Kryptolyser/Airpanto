@@ -13,12 +13,14 @@ public class PlayerController : MonoBehaviour
 {
 	public float speed;
 	public Boundarie boundarie;
+	public bool frozen;
 
 	private Rigidbody rb;
 	private UpperHandle handle;
 
 	async void Start ()
 	{
+		frozen = true;
 		rb = GetComponent<Rigidbody>();
 		handle = GameObject.Find("Panto").GetComponent<UpperHandle>();
 
@@ -40,7 +42,8 @@ public class PlayerController : MonoBehaviour
 				Mathf.Clamp (rb.position.z, boundarie.zMin, boundarie.zMax)
 		); */
 
-		PantoMovement();
+		if (!frozen)
+			PantoMovement();
 	}
 
 	void PantoMovement() 

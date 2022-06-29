@@ -12,7 +12,8 @@ public class Vis : MonoBehaviour
 
     void Awake()
     {
-        views = new LayerMask[] { blindView, enhancedBlindView, developmentView };
+        views = new LayerMask[] { developmentView, blindView, enhancedBlindView };
+        Camera.main.cullingMask = views[current];
     }
 
     void Update()

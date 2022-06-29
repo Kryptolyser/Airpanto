@@ -1,5 +1,4 @@
-﻿using DualPantoFramework;
-using UnityEngine;
+﻿using UnityEngine;
 
 [System.Serializable]
 public class AIBoundarie
@@ -14,7 +13,6 @@ public class AIController : MonoBehaviour {
 	private bool opponentSide = true;
     private float diskOffset;
 	private Vector3 targetPos;
-	private LowerHandle handle;
 
 	public GameObject disk;
 	public AIBoundarie boundarie;
@@ -23,13 +21,7 @@ public class AIController : MonoBehaviour {
 	{
 		rb = GetComponent<Rigidbody>();
 
-
 		diskObject = GameObject.FindWithTag ("Disk");
-	}
-
-    void Update()
-    {
-		handle.MoveToPosition(gameObject.transform.position, 10, true);
 	}
 
     void LateUpdate ()
