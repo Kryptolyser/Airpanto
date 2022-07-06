@@ -15,7 +15,18 @@ public class Level1 : MonoBehaviour
 
 	async void Start()
     {
+
 		p1 = GameObject.FindWithTag("P1");
+
+		Level level = GameObject.Find("Panto").GetComponent<Level>();
+		await level.PlayIntroduction();
+
+
+		
+		p1.transform.position = new Vector3(0, 0.05f, -5);
+		transform.position = new Vector3(0, 0.05f, 0);
+		await GameObject.FindObjectOfType<PlayerController>().ActivatePlayer();
+		await GameObject.FindObjectOfType<DiskController>().ActivateDisk();
 		speechOut = new SpeechOut();
 		lHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
 		uHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
@@ -23,24 +34,24 @@ public class Level1 : MonoBehaviour
 
 		uHandle.Freeze();
 		speechOut = new SpeechOut();
-		await speechOut.Speak("Hello player. " +
-			"Welcome to your greatest haptic experience. " +
-			"This is Airpanto! " +
-			"For now, try to hit the puck in front of you.");
+		await speechOut.Speak("Try hitting the ball.");
+		
 		p1.GetComponent<PlayerController>().frozen = false;
 		uHandle.Free();
 		await lHandle.SwitchTo(gameObject, 5);
 		audioSource.Play();
 	}
 
+	
     void Update()
     {
         
     }
 
+
 	async void OnCollisionEnter(Collision other)
 	{
-		if (other.gameObject.CompareTag("P1"))
+		if (other.gameObject.CompareTag("P1") && !p1.GetComponent<PlayerController>().frozen)
 		{
             await speechOut.Speak("Wow, you are so good at this.");
 		}
