@@ -26,8 +26,14 @@ public class DiskController : MonoBehaviour {
 	public GameObject goalCanvas;
 	public GameObject gameOverCanvas;
 	public GameObject pauseMenuCanvas;
+	
 
 	async void Start ()
+	{
+		
+	}
+
+	public async Task ActivateDisk()
 	{
 		gameOver = false;
 		gamePaused = false;

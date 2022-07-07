@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Level1 : MonoBehaviour
+public class Level12 : MonoBehaviour
 {
     private SpeechOut speechOut;
 	private LowerHandle lHandle;
@@ -34,7 +34,7 @@ public class Level1 : MonoBehaviour
 
 		uHandle.Freeze();
 		speechOut = new SpeechOut();
-		await speechOut.Speak("Try hitting the ball.");
+		await speechOut.Speak("Try to score!");
 		
 		p1.GetComponent<PlayerController>().frozen = false;
 		uHandle.Free();
@@ -51,9 +51,9 @@ public class Level1 : MonoBehaviour
 
 	async void OnCollisionEnter(Collision other)
 	{
-		if (other.gameObject.CompareTag("P1") && !p1.GetComponent<PlayerController>().frozen)
+		if (other.gameObject.CompareTag("Player2Goal") && !p1.GetComponent<PlayerController>().frozen)
 		{
-            await speechOut.Speak("Wow, you are so good at this.");
+            await speechOut.Speak("Good Job!");
 		}
 	}
 }

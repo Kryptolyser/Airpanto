@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 
 [System.Serializable]
 public class Boundarie
@@ -13,16 +14,22 @@ public class PlayerController : MonoBehaviour
 {
 	public float speed;
 	public Boundarie boundarie;
-	public bool frozen;
+	public bool frozen = true;
+	
 
 	private Rigidbody rb;
 	private UpperHandle handle;
-
+	
 	async void Start ()
 	{
-		frozen = true;
 		rb = GetComponent<Rigidbody>();
 		handle = GameObject.Find("Panto").GetComponent<UpperHandle>();
+	
+	}
+
+	public async Task ActivatePlayer(){
+		
+		
 
 		await handle.MoveToPosition(gameObject.transform.position, speed, true);
 	}
