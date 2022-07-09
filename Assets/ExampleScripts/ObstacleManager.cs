@@ -30,4 +30,23 @@ public class ObstacleManager : MonoBehaviour
             }
         }
     }
+
+    private void OnDestroy()
+    {
+        foreach (PantoCollider collider in pantoColliders)
+        {
+            collider.Disable();
+            collider.Remove();
+        }
+    }
+
+
+    private void OnApplicationQuit()
+    {
+        foreach (PantoCollider collider in pantoColliders)
+        {
+            collider.Disable();
+            collider.Remove();
+        }
+    }
 }

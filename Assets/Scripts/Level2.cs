@@ -2,6 +2,7 @@ using DualPantoFramework;
 using SpeechIO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Level2 : MonoBehaviour
@@ -11,33 +12,42 @@ public class Level2 : MonoBehaviour
 	private UpperHandle uHandle;
 	private AudioSource audioSource;
 	private Rigidbody rb;
-	private MeshCollider collider;
-	private bool hitByPlayer;
+	private bool scoredGoal = false;
 
 	public GameObject p1;
 
 	async void Start()
     {
-		rb = GetComponent<Rigidbody>();
-		collider = GetComponent<MeshCollider>();
 		p1 = GameObject.FindWithTag("P1");
 		speechOut = new SpeechOut();
 		lHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
 		uHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
 		audioSource = gameObject.GetComponent<AudioSource>();
-		hitByPlayer = false;
+		rb = gameObject.GetComponent<Rigidbody>();
 
-		uHandle.Freeze();
+		p1.transform.position = new Vector3(0, 0.05f, -7.0602f);
+		transform.position = new Vector3(-2.5f, 0.05f, -0.6f);
+
+		await lHandle.MoveToPosition(new Vector3(0, 0, -3.52f), 3f);
+		await uHandle.MoveToPosition(new Vector3(0, 0, -3.52f), 3f);
+		await speechOut.Speak("Please get ready and grab the handles in front of you.");
+		await Task.Delay(2000);
+
+		await GameObject.FindObjectOfType<PlayerController>().ActivatePlayer();
+		await GameObject.FindObjectOfType<DiskController>().ActivateDisk();
+
+		Level level = GameObject.Find("Panto").GetComponent<Level>();
+		await level.PlayIntroduction();
+
+		await GameObject.FindObjectOfType<DiskController>().ActivateDisk();
+
 		speechOut = new SpeechOut();
-        await speechOut.Speak("Hello player. " +
-            "Welcome to your second greatest haptic experience ever. " +
-            "This is Airpanto! " +
-            "There is a puck coming at you. Try to reflect it.");
-        p1.GetComponent<PlayerController>().frozen = false;
+		await speechOut.Speak("Try to score a goal!");
+		p1.GetComponent<PlayerController>().frozen = false;
 		uHandle.Free();
-		await lHandle.SwitchTo(gameObject, 5);
-
-		Reset();
+		await lHandle.SwitchTo(gameObject, 20);
+		audioSource.Play();
+		rb.velocity = new Vector3(2.5f, 0f, -5f);
 	}
 
     void Update()
@@ -45,34 +55,31 @@ public class Level2 : MonoBehaviour
         
     }
 
-	async void Reset() 
-	{
-		gameObject.transform.position = new Vector3(-3.85f, 0f, 3.32f);
-		collider.enabled = true;
-		audioSource.Play();
-
-		rb.velocity = new Vector3(Random.Range(0.5f, 1.5f), 0f, -5f);
-	}
-
 	async void OnCollisionEnter(Collision other)
 	{
-		if (other.gameObject.CompareTag("Untagged"))
-			return;
+		if (other.gameObject.CompareTag("Player2Goal") && !scoredGoal)
+		{
+			scoredGoal = true;
+			await speechOut.Speak("Nice! You scored a goal.");
+		}
 
-		if (other.gameObject.CompareTag("P1"))
-		{
-			hitByPlayer = true;
-			await speechOut.Speak("You are amazing! Good job!");
-		}
-		else
-		{
-			rb.velocity = new Vector3();
-			collider.enabled = false;
-			if (!hitByPlayer)
-			{
-				await speechOut.Speak("Ops, try again. And this time, hit the puck.");
-				Reset();
-			}
-		}
+		//if (other.gameObject.CompareTag("Untagged"))
+		//	return;
+
+		//if (other.gameObject.CompareTag("P1"))
+		//{
+		//	hitByPlayer = true;
+		//	await speechOut.Speak("You are amazing! Good job!");
+		//}
+		//else
+		//{
+		//	rb.velocity = new Vector3();
+		//	collider.enabled = false;
+		//	if (!hitByPlayer)
+		//	{
+		//		await speechOut.Speak("Ops, try again. And this time, hit the puck.");
+		//		Reset();
+		//	}
+		//}
 	}
 }

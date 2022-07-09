@@ -22,7 +22,7 @@ namespace DualPantoFramework
         /// <summary>
         /// Introduce all objects of interest in order of their priority. Free both handles afterwards.
         /// </summary>
-        async public Task PlayIntroduction(float introductionSpeed = 10f, int msDelayBetweenObjects = 200)
+        async public Task PlayIntroduction(float introductionSpeed = 1f, int msDelayBetweenObjects = 1000)
         {
             speed = introductionSpeed;
             ObjectOfInterest[] gos = UnityEngine.Object.FindObjectsOfType<ObjectOfInterest>();

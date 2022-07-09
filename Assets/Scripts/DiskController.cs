@@ -58,8 +58,10 @@ public class DiskController : MonoBehaviour {
 
 		lHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
 		uHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
-		await lHandle.MoveToPosition(new Vector3(0,1,0), 5, false);
-		await lHandle.MoveToPosition(gameObject.transform.position, 5, false);
+		//await lHandle.MoveToPosition(new Vector3(0,1,-3.52f), 3, true);
+		//await lHandle.MoveToPosition(gameObject.transform.position, 5, true);
+		//lHandle.Freeze();
+		await lHandle.SwitchTo(gameObject, 20f);
 	}
 
 	void Update()
@@ -75,28 +77,28 @@ public class DiskController : MonoBehaviour {
 			}
 		}
 
-		timeLeft -= Time.deltaTime;
+		//timeLeft -= Time.deltaTime;
 
-		timeText.text = "TIME LEFT: " + timeLeft.ToString("f1");
+		//timeText.text = "TIME LEFT: " + timeLeft.ToString("f1");
 
-		if ( timeLeft < 0 )
-		{
-			Time.timeScale = 0;
-			gameOverCanvas.SetActive(true);
-			timeUpText.text = "TIME'S UP!";
-			if(p1Score > p2Score)
-			{
-				gameOverText.text = "BLUE WINS!";
-			}
-			else if(p1Score < p2Score)
-			{
-				gameOverText.text = "RED WINS!";
-			}
-			else
-			{
-				gameOverText.text = "IT'S A DRAW!";
-			}
-		}
+		//if ( timeLeft < 0 )
+		//{
+		//	Time.timeScale = 0;
+		//	gameOverCanvas.SetActive(true);
+		//	timeUpText.text = "TIME'S UP!";
+		//	if(p1Score > p2Score)
+		//	{
+		//		gameOverText.text = "BLUE WINS!";
+		//	}
+		//	else if(p1Score < p2Score)
+		//	{
+		//		gameOverText.text = "RED WINS!";
+		//	}
+		//	else
+		//	{
+		//		gameOverText.text = "IT'S A DRAW!";
+		//	}
+		//}
 	}
 
 	void OnCollisionEnter(Collision other)

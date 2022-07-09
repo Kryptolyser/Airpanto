@@ -15,23 +15,24 @@ public class PlayerController : MonoBehaviour
 	public float speed;
 	public Boundarie boundarie;
 	public bool frozen = true;
-	
+	public AudioClip[] audioSources;
 
 	private Rigidbody rb;
 	private UpperHandle handle;
-	
-	async void Start ()
+	private float lastDiskCollision;
+	private AudioSource audioSource;
+
+	void Start ()
 	{
 		rb = GetComponent<Rigidbody>();
 		handle = GameObject.Find("Panto").GetComponent<UpperHandle>();
-	
+		lastDiskCollision = Time.time;
+		audioSource = gameObject.GetComponent<AudioSource>();
 	}
 
-	public async Task ActivatePlayer(){
-		
-		
-
-		await handle.MoveToPosition(gameObject.transform.position, speed, true);
+	public async Task ActivatePlayer()
+	{
+		await handle.SwitchTo(gameObject, 20f);
 	}
 
 	void Update ()
@@ -53,7 +54,23 @@ public class PlayerController : MonoBehaviour
 			PantoMovement();
 	}
 
-	void PantoMovement() 
+    private void OnCollisionEnter(Collision collision)
+    {
+		if (collision.gameObject.tag == "Disk" &&
+				Time.time - lastDiskCollision > 0.5)
+		{
+			PlayRandomHitSound();
+			lastDiskCollision = Time.time;
+		}
+    }
+
+	void PlayRandomHitSound() 
+	{
+		audioSource.clip = audioSources[Random.Range(0, audioSources.Length)];
+		audioSource.Play();
+	}
+
+    void PantoMovement() 
     {
         Vector3 handlePos = handle.GetPosition();
 		handlePos.y = 0.05f;
