@@ -13,6 +13,7 @@ public class Level1 : MonoBehaviour
 	private UpperHandle uHandle;
 	private AudioSource audioSource;
 	private bool hitPuck = false;
+	private bool debug;
 
 	public GameObject p1;
 
@@ -23,20 +24,27 @@ public class Level1 : MonoBehaviour
 		lHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
 		uHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
 		audioSource = gameObject.GetComponent<AudioSource>();
+		debug = GameObject.Find("Panto").GetComponent<DualPantoSync>().debug;
 
 		p1.transform.position = new Vector3(0, 0.05f, -7.0602f);
 		transform.position = new Vector3(0, 0.05f, -3.52f);
 
 		await lHandle.MoveToPosition(new Vector3(0,0, -3.52f), 3f);
 		await uHandle.MoveToPosition(new Vector3(0,0, -3.52f), 3f);
-		await speechOut.Speak("Welcome to Airpanto! Please get ready and grab the handles in front of you.");
-		await Task.Delay(2000);
+		if (!debug)
+		{
+			await speechOut.Speak("Welcome to Airpanto! Please get ready and grab the handles in front of you.");
+			await Task.Delay(2000);
+		}
 
 		await GameObject.FindObjectOfType<PlayerController>().ActivatePlayer();
 		await GameObject.FindObjectOfType<DiskController>().ActivateDisk();
 
-		Level level = GameObject.Find("Panto").GetComponent<Level>();
-		await level.PlayIntroduction();
+		if (!debug)
+		{
+			Level level = GameObject.Find("Panto").GetComponent<Level>();
+			await level.PlayIntroduction();
+		}
 
 		await GameObject.FindObjectOfType<DiskController>().ActivateDisk();
 
