@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
 		handle = GameObject.Find("Panto").GetComponent<UpperHandle>();
 		lastDiskCollision = Time.time;
 		audioSource = gameObject.GetComponent<AudioSource>();
+		frozen = true;
 	}
 
 	public async Task ActivatePlayer()

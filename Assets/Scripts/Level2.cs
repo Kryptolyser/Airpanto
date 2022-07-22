@@ -30,16 +30,13 @@ public class Level2 : MonoBehaviour
 		p1.transform.position = new Vector3(0, 0.05f, -7.0602f);
 		transform.position = new Vector3(-2.5f, 0.05f, -0.6f);
 
-		await lHandle.MoveToPosition(new Vector3(0, 0, -3.52f), 3f);
-		await uHandle.MoveToPosition(new Vector3(0, 0, -3.52f), 3f);
-		if (!debug)
-		{
-			await speechOut.Speak("Please get ready and grab the handles in front of you.");
-			await Task.Delay(2000);
-		}
-
-		await GameObject.FindObjectOfType<PlayerController>().ActivatePlayer();
-		await GameObject.FindObjectOfType<DiskController>().ActivateDisk();
+		//await lHandle.MoveToPosition(new Vector3(0, 0, -3.52f), 3f);
+		//await uHandle.MoveToPosition(new Vector3(0, 0, -3.52f), 3f);
+		//if (!debug)
+		//{
+		//	await speechOut.Speak("Please get ready and grab the handles in front of you.");
+		//	await Task.Delay(2000);
+		//}
 
 		if (!debug)
 		{
@@ -47,10 +44,10 @@ public class Level2 : MonoBehaviour
 			await level.PlayIntroduction();
 		}
 
+		await GameObject.FindObjectOfType<PlayerController>().ActivatePlayer();
 		await GameObject.FindObjectOfType<DiskController>().ActivateDisk();
 
-		speechOut = new SpeechOut();
-		await speechOut.Speak("Try to score a goal!");
+		await speechOut.Speak("Der Puck kommt auf dich zu. Schieﬂe ihn in das Tor.", 1, SpeechBase.LANGUAGE.GERMAN);
 		p1.GetComponent<PlayerController>().frozen = false;
 		uHandle.Free();
 		await lHandle.SwitchTo(gameObject, 20);
@@ -68,7 +65,7 @@ public class Level2 : MonoBehaviour
 		if (other.gameObject.CompareTag("Player2Goal") && !scoredGoal)
 		{
 			scoredGoal = true;
-			await speechOut.Speak("Nice! You scored a goal.");
+			await speechOut.Speak("Klasse! Du hast gerade ein Tor geschossen!", 1, SpeechBase.LANGUAGE.GERMAN);
 		}
 
 		//if (other.gameObject.CompareTag("Untagged"))

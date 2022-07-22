@@ -24,6 +24,7 @@ namespace DualPantoFramework
         /// </summary>
         async public Task PlayIntroduction(float introductionSpeed = 1f, int msDelayBetweenObjects = 1000)
         {
+            speechOut.SetLanguage(SpeechBase.LANGUAGE.GERMAN);
             speed = introductionSpeed;
             ObjectOfInterest[] gos = UnityEngine.Object.FindObjectsOfType<ObjectOfInterest>();
             Array.Sort(gos, ((go1, go2) => go2.priority.CompareTo(go1.priority)));
@@ -39,7 +40,7 @@ namespace DualPantoFramework
         async private Task IntroduceObject(ObjectOfInterest objectOfInterest, int msDelay)
         {
             Task[] tasks = new Task[2];
-            tasks[0] = speechOut.Speak(objectOfInterest.description);
+            tasks[0] = speechOut.Speak(objectOfInterest.description, 1, SpeechBase.LANGUAGE.GERMAN);
 
             PantoHandle pantoHandle = objectOfInterest.isOnUpper
                 ? (PantoHandle)GetPantoGameObject().GetComponent<UpperHandle>()

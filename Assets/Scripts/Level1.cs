@@ -21,6 +21,7 @@ public class Level1 : MonoBehaviour
     {
 		p1 = GameObject.FindWithTag("P1");
 		speechOut = new SpeechOut();
+		speechOut.SetLanguage(SpeechBase.LANGUAGE.GERMAN);
 		lHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
 		uHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
 		audioSource = gameObject.GetComponent<AudioSource>();
@@ -33,12 +34,11 @@ public class Level1 : MonoBehaviour
 		await uHandle.MoveToPosition(new Vector3(0,0, -3.52f), 3f);
 		if (!debug)
 		{
-			await speechOut.Speak("Welcome to Airpanto! Please get ready and grab the handles in front of you.");
+			await speechOut.Speak("Willkommen bei Airpanto! " +
+				"Mach dich bereit und greife nach den beiden Armen vor dir. " +
+				"Halte den unteren Arm nur ganz leicht fest, damit er später dem Puck folgen kann.", 1, SpeechBase.LANGUAGE.GERMAN);
 			await Task.Delay(2000);
 		}
-
-		await GameObject.FindObjectOfType<PlayerController>().ActivatePlayer();
-		await GameObject.FindObjectOfType<DiskController>().ActivateDisk();
 
 		if (!debug)
 		{
@@ -46,11 +46,10 @@ public class Level1 : MonoBehaviour
 			await level.PlayIntroduction();
 		}
 
+		await GameObject.FindObjectOfType<PlayerController>().ActivatePlayer();
 		await GameObject.FindObjectOfType<DiskController>().ActivateDisk();
 
-		
-		speechOut = new SpeechOut();
-		await speechOut.Speak("Try hitting the puck in front of you.");
+		await speechOut.Speak("Deine erste Aufgabe: Versuche mit dem oberen Arm den Puck vor dir zu treffen. Viel Erfolg!", 1, SpeechBase.LANGUAGE.GERMAN);
 		p1.GetComponent<PlayerController>().frozen = false;
 		uHandle.Free();
 		await lHandle.SwitchTo(gameObject, 20);
@@ -74,7 +73,13 @@ public class Level1 : MonoBehaviour
 				!hitPuck)
 		{
 			hitPuck = true;
-            await speechOut.Speak("Wow, you are so good at this.");
+            await speechOut.Speak("Super! Du hast den Puck getroffen. Gehen wir weiter zum nächsten Level.", 1, SpeechBase.LANGUAGE.GERMAN);
+			SceneManager.LoadScene(sceneName: "Level 2");
 		}
 	}
+
+    private void OnApplicationQuit()
+    {
+		speechOut.Stop();
+    }
 }
