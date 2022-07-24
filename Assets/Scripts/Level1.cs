@@ -19,6 +19,7 @@ public class Level1 : MonoBehaviour
 
 	async void Start()
     {
+		
 		p1 = GameObject.FindWithTag("P1");
 		speechOut = new SpeechOut();
 		speechOut.SetLanguage(SpeechBase.LANGUAGE.GERMAN);
@@ -27,6 +28,8 @@ public class Level1 : MonoBehaviour
 		audioSource = gameObject.GetComponent<AudioSource>();
 		debug = GameObject.Find("Panto").GetComponent<DualPantoSync>().debug;
 
+		lHandle.Freeze();
+		uHandle.Freeze();
 		p1.transform.position = new Vector3(0, 0.05f, -7.0602f);
 		transform.position = new Vector3(0, 0.05f, -3.52f);
 
@@ -36,7 +39,7 @@ public class Level1 : MonoBehaviour
 		{
 			await speechOut.Speak("Willkommen bei Airpanto! " +
 				"Mach dich bereit und greife nach den beiden Armen vor dir. " +
-				"Halte den unteren Arm nur ganz leicht fest, damit er später dem Puck folgen kann.", 1, SpeechBase.LANGUAGE.GERMAN);
+				"Halte den unteren Arm nur ganz leicht fest, damit er spï¿½ter dem Puck folgen kann.", 1, SpeechBase.LANGUAGE.GERMAN);
 			await Task.Delay(2000);
 		}
 
@@ -52,7 +55,7 @@ public class Level1 : MonoBehaviour
 		await speechOut.Speak("Deine erste Aufgabe: Versuche mit dem oberen Arm den Puck vor dir zu treffen. Viel Erfolg!", 1, SpeechBase.LANGUAGE.GERMAN);
 		p1.GetComponent<PlayerController>().frozen = false;
 		uHandle.Free();
-		await lHandle.SwitchTo(gameObject, 20);
+		//await lHandle.SwitchTo(gameObject, 20);
 		audioSource.Play();
 	}
 
@@ -61,6 +64,7 @@ public class Level1 : MonoBehaviour
     {
 		if (Input.GetKeyDown(KeyCode.Return))
 		{
+			lHandle.Free();
 			SceneManager.LoadScene(sceneName: "Level 2");
 		}
 	}
@@ -73,7 +77,9 @@ public class Level1 : MonoBehaviour
 				!hitPuck)
 		{
 			hitPuck = true;
-            await speechOut.Speak("Super! Du hast den Puck getroffen. Gehen wir weiter zum nächsten Level.", 1, SpeechBase.LANGUAGE.GERMAN);
+            await speechOut.Speak("Super! Du hast den Puck getroffen. Gehen wir weiter zum nÃ¤chsten Level.", 1, SpeechBase.LANGUAGE.GERMAN);
+			lHandle.Free();
+			uHandle.Free();
 			SceneManager.LoadScene(sceneName: "Level 2");
 		}
 	}

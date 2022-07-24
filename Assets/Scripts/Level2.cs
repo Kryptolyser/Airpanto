@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Level2 : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class Level2 : MonoBehaviour
 
 	async void Start()
     {
+		Debug.Log("Loading Level 2 ----------------------------------------------------");
 		p1 = GameObject.FindWithTag("P1");
 		speechOut = new SpeechOut();
 		lHandle = GameObject.Find("Panto").GetComponent<LowerHandle>();
@@ -27,11 +29,13 @@ public class Level2 : MonoBehaviour
 		rb = gameObject.GetComponent<Rigidbody>();
 		debug = GameObject.Find("Panto").GetComponent<DualPantoSync>().debug;
 
+		
 		p1.transform.position = new Vector3(0, 0.05f, -7.0602f);
 		transform.position = new Vector3(-2.5f, 0.05f, -0.6f);
 
-		//await lHandle.MoveToPosition(new Vector3(0, 0, -3.52f), 3f);
-		//await uHandle.MoveToPosition(new Vector3(0, 0, -3.52f), 3f);
+		await lHandle.MoveToPosition(new Vector3(0, 0, -3.52f), 3f);
+		await uHandle.MoveToPosition(new Vector3(0, 0, -3.52f), 3f);
+		Debug.Log("Moved to position ----------------------------------------------------");
 		//if (!debug)
 		//{
 		//	await speechOut.Speak("Please get ready and grab the handles in front of you.");
@@ -43,14 +47,14 @@ public class Level2 : MonoBehaviour
 			Level level = GameObject.Find("Panto").GetComponent<Level>();
 			await level.PlayIntroduction();
 		}
+		Debug.Log("Played Intro ----------------------------------------------------");
 
 		await GameObject.FindObjectOfType<PlayerController>().ActivatePlayer();
 		await GameObject.FindObjectOfType<DiskController>().ActivateDisk();
 
-		await speechOut.Speak("Der Puck kommt auf dich zu. Schieße ihn in das Tor.", 1, SpeechBase.LANGUAGE.GERMAN);
+		await speechOut.Speak("Der Puck kommt auf dich zu. Schieï¿½e ihn in das Tor.", 1, SpeechBase.LANGUAGE.GERMAN);
 		p1.GetComponent<PlayerController>().frozen = false;
 		uHandle.Free();
-		await lHandle.SwitchTo(gameObject, 20);
 		audioSource.Play();
 		rb.velocity = new Vector3(2.5f, 0f, -5f);
 	}
@@ -66,7 +70,14 @@ public class Level2 : MonoBehaviour
 		{
 			scoredGoal = true;
 			await speechOut.Speak("Klasse! Du hast gerade ein Tor geschossen!", 1, SpeechBase.LANGUAGE.GERMAN);
+			if (SceneManager.GetActiveScene().name == "Level 2"){
+				lHandle.Free();
+				uHandle.Free();
+				SceneManager.LoadScene(sceneName: "Level 3");
+			}
+			
 		}
+
 
 		//if (other.gameObject.CompareTag("Untagged"))
 		//	return;
@@ -87,4 +98,11 @@ public class Level2 : MonoBehaviour
 		//	}
 		//}
 	}
+
+	private void OnApplicationQuit()
+	{
+		speechOut.Stop();
+	}
+
+
 }
